@@ -155,18 +155,18 @@ namespace Planetarium.Models
         public override string ToString()
         {
 			Journalisation.Tracer("Affichage des informations de la constelation");
-            return "Code: " + Code + "\n"+
-                            "nom_scientifique: " + NomScientifique + "\n" +
-                             "nom_francais: " + NomFrancais + "\n" +
-                             "description: " + Description + "\n\n" +
-                              "Etoile maître: " + Racine.Code + "\n" +
-                            "Nombre d'étoile: " + CompterEtoiles(Racine) + "\n" +
-                             "Profondeur: " + ObtenirProfondeur(Racine) + "\n" +
-                             "Largeur Max: " + ObtenirLargeurMax() + "\n" +
-                              "Etoile la plus brillante: " + ObtenirEtoilePlusBrillante(Racine) + "\n" +
-                             "Etoile la plus loin: " + ObtenirEtoilePlusLoin(Racine) + "\n" +
-                             "Somme des index de couleur: " + ObtenirSommeIndexCouleur(Racine) + "\n";	
-        }
+			return "Code: " + Code + "\n" +
+							"nom_scientifique: " + NomScientifique + "\n" +
+							 "nom_francais: " + NomFrancais + "\n" +
+							 "description: " + Description + "\n\n" +
+							  "Etoile maître: " + Racine.Code + "\n" +
+							"Nombre d'étoile: " + CompterEtoiles(Racine) + "\n" +
+							 "Profondeur: " + ObtenirProfondeur(Racine) + "\n" +
+							 "Largeur Max: " + ObtenirLargeurMax() + "\n" +
+							  "Etoile la plus brillante: " + ObtenirEtoilePlusBrillante(Racine).Code + "\n" +
+							 "Etoile la plus loin: " + ObtenirEtoilePlusLoin(Racine).Code + "\n" +
+							 "Somme des index de couleur: " + ObtenirSommeIndexCouleur(Racine) + "\n";
+		}
         /// <summary>
         /// Utilisée par AfficherVisuelConstellation, construis la chaîne d'un arbre
         /// </summary>
@@ -180,12 +180,12 @@ namespace Planetarium.Models
 			if (etoile == null)
 				return "";
 			string couverture = String.IsNullOrEmpty(sens) ? "" : sens + ": ";
-			string resultat = prefixe + (estDernier ? "└──" : "├──") + couverture + etoile.Code + "\n";
+			string resultat = String.IsNullOrEmpty(prefixe)? etoile.Code+"\n" : prefixe + (estDernier ? "└── " : "├── ") + couverture + etoile.Code + "\n";
 			bool testGauche = etoile.Gauche != null;
 			bool testDroite = etoile.Droite != null;
 			if(testGauche || testDroite)
 			{
-				string prefixe1 = prefixe + (estDernier ? "    " : "|   ");
+				string prefixe1 = prefixe + (estDernier ? "   " : "│   ");
 				if (testGauche)
 					resultat += arborescence(etoile.Gauche, prefixe1, !testDroite, "G");
 				if(testDroite)
@@ -237,15 +237,19 @@ namespace Planetarium.Models
 		{
 			if (racine == null)
 				return null;
-			Etoile brillanteGauche = ObtenirEtoilePlusBrillante(racine.Gauche);
-			Etoile brillanteDroite = ObtenirEtoilePlusBrillante(racine.Droite);
+			if (racine.Droite == null)
+				return racine;
+			else
+				return ObtenirEtoilePlusBrillante(racine.Droite);
+			//Etoile brillanteGauche = ObtenirEtoilePlusBrillante(racine.Gauche);
+			//Etoile brillanteDroite = ObtenirEtoilePlusBrillante(racine.Droite);
 
-			Etoile brillante = racine;
-			if(brillanteGauche != null && brillanteGauche.Valeur < brillante.Valeur)
-				brillante = brillanteGauche;
-			if (brillanteDroite != null && brillanteDroite.Valeur < brillante.Valeur)
-				brillante = brillanteDroite;
-			return brillante;
+			//Etoile brillante = racine;
+			//if(brillanteGauche != null && brillanteGauche.Valeur < brillante.Valeur)
+			//	brillante = brillanteGauche;
+			//if (brillanteDroite != null && brillanteDroite.Valeur < brillante.Valeur)
+			//	brillante = brillanteDroite;
+			//return brillante;
 		}
 		/// <summary>
 		/// Obtiens l'étoile la plus loin de la terre
@@ -276,7 +280,7 @@ namespace Planetarium.Models
 				return 0;
 			if(racine.Gauche == null && racine.Droite == null)
 				return racine.Index_couleur;
-			return ObtenirSommeIndexCouleur(racine.Gauche) + ObtenirSommeIndexCouleur(racine.Droite);
+			return racine.Index_couleur+ ObtenirSommeIndexCouleur(racine.Gauche) + ObtenirSommeIndexCouleur(racine.Droite);
 		}
     }
 	/// <summary>
