@@ -30,7 +30,15 @@
 		public string Nom_commun
 		{
 			get { return nom_commun; }
-			set { nom_commun = value; }
+			set {
+				if (value == "Null")
+				{
+                    nom_commun = null;
+					throw new NomCommunEstNullException();
+                }
+				else
+					nom_commun= value;
+			}
 		}
 		private string _code;
 
@@ -113,7 +121,12 @@
         // "x": -40.516266,
         // "y": 49.207344,
         // "z": -31.440558
-
+        public class NomCommunEstNullException : Exception
+        {
+            public NomCommunEstNullException() : base($"Le nom commun de l'étoile a une valeur null")
+            {
+            }
+        }
 
     }
 }

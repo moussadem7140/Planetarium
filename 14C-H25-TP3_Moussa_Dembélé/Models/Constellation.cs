@@ -51,7 +51,9 @@ namespace Planetarium.Models
         }
 		public void AjouterEtoile(Etoile etoile)
 		{
-            if(Racine==null)
+			if (RechercherEtoile(Racine, etoile.Code) != null)
+				throw new StarAlreadyExistsException(etoile);
+            if (Racine==null)
 				Racine= etoile;
 			else
 				Racine = AjouterRecursif(Racine, etoile);
@@ -199,4 +201,10 @@ namespace Planetarium.Models
 			return ObtenirSommeIndexCouleur(racine.Gauche) + ObtenirSommeIndexCouleur(racine.Droite);
 		}
     }
+	public class StarAlreadyExistsException: Exception
+	{
+		public StarAlreadyExistsException(Etoile etoile): base($"L'étoile {etoile} existe déja dans la constellation")
+		{
+		}
+	}
 }
