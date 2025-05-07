@@ -46,8 +46,12 @@ namespace _14C_H25_TP3_Moussa_Dembélé.Classes
                     }
                     Constellations.Add(c.Code, c);
                 }
+                Journalisation.Tracer( $"Chargement de la carte du ciel: {fichier}", Journalisation.Categorie.information);
             }
         }
+        /// <summary>
+        /// Permet de decharger une carte dans le visuel
+        /// </summary>
         public static void DechargerFichier()
         {
             foreach(Constellation c in Constellations.Values)
@@ -55,11 +59,21 @@ namespace _14C_H25_TP3_Moussa_Dembélé.Classes
                 c.SupprimerEtoiles(c.Racine);
             }
             Constellations.Clear();
+            Journalisation.Tracer("Dechargement de la constellation", Journalisation.Categorie.information);
         }
+        /// <summary>
+        /// Cette méthode permet de compter le nombre de constellations de votre structure de données.
+        /// </summary>
+        /// <returns>Le nombre d'étoiles</returns>
         public static int CompterConstellations()
         {
             return Constellations.Count;
         }
+        /// <summary>
+        /// cette méthode retourne la constellation trouvée à partir de notre structure de données
+        /// </summary>
+        /// <param name="code">Code de la constellation a troubver</param>
+        /// <returns></returns>
         public static Constellation RechercherConstellation(string code)
         {
             return Constellations[code];

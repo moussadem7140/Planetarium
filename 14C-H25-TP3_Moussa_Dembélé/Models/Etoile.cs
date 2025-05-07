@@ -1,6 +1,11 @@
-﻿namespace Planetarium.Models
+﻿using Planetarium.Classes;
+
+namespace Planetarium.Models
 {
     ////TODO : Compléter la classe Etoile avec ces attributs, propriétés, constructeur et méthodes
+	/// <summary>
+	/// Classe Répresentant le noeud de l'arbre
+	/// </summary>
     public class Etoile
     {
 		private Etoile _gauche;
@@ -31,13 +36,22 @@
 		{
 			get { return nom_commun; }
 			set {
-				if (value == "Null")
+				try
 				{
-                    nom_commun = null;
-					throw new NomCommunEstNullException();
+                    if (value == "Null")
+                    {
+                        nom_commun = null;
+                        Journalisation.Tracer("Le nom est null", Journalisation.Categorie.Erreur);
+                        throw new NomCommunEstNullException();
+                    }
+                    else
+                        nom_commun = value;
                 }
-				else
-					nom_commun= value;
+                catch(Exception ex)
+				{
+					throw ex;
+				}
+				
 			}
 		}
 		private string _code;
@@ -104,6 +118,10 @@
             Z = z;
 			Valeur= valeur;
         }
+		/// <summary>
+		/// Information générales de l'étoile
+		/// </summary>
+		/// <returns></returns>
 		public override string ToString()
 		{
 			return "Code: " + Code + "\n\r" +
@@ -115,12 +133,9 @@
 				   "Y:" + Y + "\n\r" +
 				   "Z:" + Z + "\n\r";
         }
-        // "distance": 231.8408,
-        // "index_couleur": -0.03,
-        // "rayon": 0.380371,
-        // "x": -40.516266,
-        // "y": 49.207344,
-        // "z": -31.440558
+        /// <summary>
+		/// Exception personnalisée pour le nom_commun et sa valeur null
+		/// </summary>
         public class NomCommunEstNullException : Exception
         {
             public NomCommunEstNullException() : base($"Le nom commun de l'étoile a une valeur null")
